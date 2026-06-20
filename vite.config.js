@@ -9,12 +9,10 @@ export default defineConfig(({ command }) => {
     define: {
       [command === 'serve' ? 'global' : '_global']: {},
     },
-    // Kök dizini projenin ana klasörü yapıyoruz çünkü yeni HTML'lerimiz burada
     root: '.', 
     build: {
       sourcemap: true,
       rollupOptions: {
-        // Kök dizindeki yeni index.html, catalog.html, library.html dosyalarını yakalar
         input: glob.sync('./*.html'),
         output: {
           manualChunks(id) {
@@ -36,13 +34,11 @@ export default defineConfig(({ command }) => {
           },
         },
       },
-      // root '.' olduğu için çıktıyı doğrudan 'dist' klasörüne verebiliriz
       outDir: 'dist',
       emptyOutDir: true,
     },
     plugins: [
       injectHTML(),
-      // Yeni HTML konumlarına göre dosya takibini güncelliyoruz
       FullReload(['./*.html', './src/partials/*.html']),
       SortCss({
         sort: 'mobile-first',
