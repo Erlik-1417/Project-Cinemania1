@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/svg+xml" href="/assets/logo-PQe6D84w.svg" />
     <title>Cinemania - Catalog</title>
-  <script type="module" crossorigin src="/assets/catalog-BLO00wQV.js"></script>
-  <link rel="stylesheet" crossorigin href="/assets/catalog-DbT6ygK8.css">
+  <script type="module" crossorigin src="/assets/catalog-C2IIS5v2.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/ui-bYA6f8x1.js">
+  <link rel="stylesheet" crossorigin href="/assets/ui-DlKYSMUc.css">
+  <link rel="stylesheet" crossorigin href="/assets/catalog-OXSqssjO.css">
 </head>
 <body>
     <header id="header" class="header" data-dev="Header Section">
@@ -88,17 +90,21 @@
 
 
     <main>
-        <section id="hero" class="hero">
-  <div class="hero__overlay">
-    <div class="container">
-      <div class="hero__content">
-        <h1 class="hero__title"></h1>
-
-        <div class="hero__rating"></div>
-
-        <p class="hero__overview"></p>
-
-        <div class="hero__actions"></div>
+        <section class="hero" id="hero">
+  <div class="hero__bg" id="heroBg"></div>
+  <div class="hero__overlay"></div>
+  <div class="container hero__container">
+    <div class="hero__content">
+      <h1 class="hero__title" id="heroTitle"></h1>
+      <div class="hero__meta" id="heroMeta"></div>
+      <p class="hero__overview" id="heroOverview"></p>
+      <div class="hero__actions">
+        <button class="btn btn--primary" id="heroTrailerBtn" type="button">
+          Watch Trailer
+        </button>
+        <button class="btn btn--secondary" id="heroDetailsBtn" type="button">
+          More Details
+        </button>
       </div>
     </div>
   </div>
