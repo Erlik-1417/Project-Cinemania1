@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/variables.css" />
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/layout.css" />
+    <link rel="stylesheet" href="./css/library.css" />
+    <base target="_blank" />
+    <title>javaproje</title>
+  </head>
+  <body>
+    <include src="./partials/header.html"></include>
+    <main class="libraryContainer">
+      <section class="trendDay">
+        <div class="trendDayPlaceHolder">
+          <h1 class="myCinemaPlaceHolder myCinemaHeader">
+            Let's Make Your Own Cinema
+          </h1>
+          <p class="myCinemaTitle">
+            Is a guide to designing a personalized movie theater experience with
+            the right equipment, customized decor, and favorite films. This
+            guide helps you bring the cinema experience into your own home with
+            cozy seating, dim lighting, and movie theater snacks.
+          </p>
+        </div>
+      </section>
+      <section class="libraryRender"></section>
+    </main>
+    <include src="./partials/footer.html"></include>
+    <include src="./partials/modal.html"></include>
+    <include src="./partials/loader.html"></include>
+    <script type="module" src="/js/library.js"></script>
+  </body>
+</html>
