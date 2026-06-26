@@ -1,37 +1,66 @@
-export const initNavigation = () => {
-  const currentPath = window.location.pathname;
-  document.querySelectorAll('.nav__link').forEach(link => {
-    const href = link.getAttribute('href');
-    if (currentPath.includes(href) || (currentPath === '/' && href.includes('index'))) {
-      link.classList.add('nav__link--active');
-    } else {
-      link.classList.remove('nav__link--active');
-    }
+let globalLoaderCount = 0;
+
+function ensureGlobalLoader() {
+  let loader = document.getElementById('globalLoader');
+
+  if (loader) return loader;
+
+  loader = document.createElement('div');
+  loader.id = 'globalLoader';
+  loader.className = 'global-loader hidden';
+  loader.innerHTML =
+    '<div class="global-loader__spinner" aria-hidden="true"></div>';
+  document.body.appendChild(loader);
+
+  return loader;
+}
+
+function ensureScrollUpButton() {
+  let button = document.getElementById('scrollUpButton');
+
+  if (button) return button;
+
+  button = document.createElement('button');
+  button.id = 'scrollUpButton';
+  button.className = 'scroll-up hidden';
+  button.type = 'button';
+  button.setAttribute('aria-label', 'Scroll to top');
+  button.textContent = '↑';
+  document.body.appendChild(button);
+
+  return button;
+}
+
+export function showGlobalLoader() {
+  const loader = ensureGlobalLoader();
+  globalLoaderCount += 1;
+  loader.classList.remove('hidden');
+}
+
+export function hideGlobalLoader() {
+  const loader = ensureGlobalLoader();
+  globalLoaderCount = Math.max(0, globalLoaderCount - 1);
+
+  if (globalLoaderCount === 0) {
+    loader.classList.add('hidden');
+  }
+}
+
+export function initGlobalUi() {
+  const scrollUpButton = ensureScrollUpButton();
+  ensureGlobalLoader();
+
+  if (scrollUpButton.dataset.bound === 'true') return;
+
+  const toggleScrollButton = () => {
+    scrollUpButton.classList.toggle('hidden', window.scrollY < 320);
+  };
+
+  window.addEventListener('scroll', toggleScrollButton, { passive: true });
+  scrollUpButton.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
-};
-export const initTheme = () => {
-  const toggle = document.getElementById('themeToggle');
-  const icon = toggle?.querySelector('.theme-toggle__icon');
-  const saved = localStorage.getItem('cinemania-theme');
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-  if (saved === 'light' || (!saved && !prefersDark)) {
-    document.documentElement.setAttribute('data-theme', 'light');
-    if (icon) icon.textContent = '☀️';
-  }
-
-  if (toggle) {
-    toggle.addEventListener('click', () => {
-      const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-      if (isLight) {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('cinemania-theme', 'dark');
-        if (icon) icon.textContent = '🌙';
-      } else {
-        document.documentElement.setAttribute('data-theme', 'light');
-        localStorage.setItem('cinemania-theme', 'light');
-        if (icon) icon.textContent = '☀️';
-      }
-    });
-  }
-};
+  toggleScrollButton();
+  scrollUpButton.dataset.bound = 'true';
+}
