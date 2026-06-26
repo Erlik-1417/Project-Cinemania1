@@ -4,12 +4,13 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/assets/logo-PQe6D84w.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cinemania — My Library</title>
     <base target="_blank" />
-    <title>Cinemania - Library</title>
-    <script type="module" crossorigin src="/assets/library-AGz6SBOU.js"></script>
-    <link rel="modulepreload" crossorigin href="/assets/ui-DrZ8pvwq.js">
+    <script type="module" crossorigin src="/assets/library-yJeR9KN8.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/ui-twzV6hcu.js">
+    <link rel="modulepreload" crossorigin href="/assets/footer-DMGsfcqA.js">
     <link rel="stylesheet" crossorigin href="/assets/ui-CYK1IGv4.css">
-    <link rel="stylesheet" crossorigin href="/assets/library-Bos3dkfW.css">
+    <link rel="stylesheet" crossorigin href="/assets/library-JStOW_fk.css">
   </head>
   <body>
     <header id="header" class="header" data-dev="Header Section">
@@ -89,30 +90,34 @@
   </div>
 </header>
 
-    <main class="libraryContainer">
-      <section class="trendDay" id="hero">
-        <div class="trendDayPlaceHolder" id="heroBg">
-          <div class="container hero__container">
-            <div class="hero__content">
-              <h1 class="myCinemaPlaceHolder myCinemaHeader" id="heroTitle">
-                Let's Make Your Own Cinema
-              </h1>
-              <p class="myCinemaTitle" id="heroOverview">
-                Is a guide to designing a personalized movie theater experience with
-                the right equipment, customized decor, and favorite films. This
-                guide helps you bring the cinema experience into your own home with
-                cozy seating, dim lighting, and movie theater snacks.
-              </p>
-              <div class="hero__actions">
-                <button class="btn btn--primary" id="heroTrailerBtn" type="button" style="display:none;">Watch Trailer</button>
-                <button class="btn btn--secondary" id="heroDetailsBtn" type="button" style="display:none;">More Details</button>
-              </div>
-            </div>
+
+    <main>
+      <section id="hero" class="hero"></section>
+
+      <section class="library-filters">
+        <div class="container filter-container">
+          <div id="genreFilter" class="custom-select" aria-haspopup="listbox">
+            <button
+              type="button"
+              class="custom-select__button"
+              aria-expanded="false"
+            >
+              <span class="custom-select__label">All Genres</span>
+              <span class="custom-select__arrow">▾</span>
+            </button>
+            <ul class="custom-select__list hide" role="listbox"></ul>
           </div>
         </div>
       </section>
-      <section class="libraryRender"></section>
+
+      <section class="library-content">
+        <div class="container">
+          <div id="libraryGallery"></div>
+          <button id="loadMore" class="btn-load-more is-hidden" type="button">Load more</button>
+        </div>
+      </section>
     </main>
+
     <footer class="footer">
   <div class="container">
     <p class="footer__copy">
@@ -207,5 +212,6 @@
   </div>
 </div>
     
+
   </body>
 </html>

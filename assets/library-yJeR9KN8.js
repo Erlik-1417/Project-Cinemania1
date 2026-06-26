@@ -1,0 +1,18 @@
+import{i as S,a as I,f as w,b as G,h as A,o as b,p as x,L as C,q as T,s as $,d as k,e as H}from"./ui-twzV6hcu.js";import"./footer-DMGsfcqA.js";let l=[],u=[],g=1;const y=9;async function _(){S(),I(),w();try{await G(),await P()}finally{A()}}async function P(){const e=document.getElementById("libraryGallery"),t=document.getElementById("loadMore"),a=document.getElementById("genreFilter");if(!e)return;if(l=b(),u=[...l],l.length===0){E(e,t,a);return}const i=await x();q(a,i),f(e,t),t.addEventListener("click",()=>{g++,f(e,t)}),R(e),document.addEventListener(C,()=>L(e,t)),document.addEventListener(T,()=>L(e,t))}function E(e,t,a){t&&t.classList.add("is-hidden"),a&&a.classList.add("is-hidden"),e.innerHTML=`
+    <div class="empty-state">
+      <p class="empty-text">OOPS...<br>We are very sorry!<br>You don't have any movies<br>at your library.</p>
+      <a href="./catalog.html" class="btn-search-more" target="_self">Search Movie</a>
+    </div>
+  `}function q(e,t){if(!e)return;const a=e.querySelector(".custom-select__list"),i=e.querySelector(".custom-select__button"),s=e.querySelector(".custom-select__label");if(!a||!i||!s)return;const m=new Set;l.forEach(n=>{var r;return(r=n.genre_ids)==null?void 0:r.forEach(d=>m.add(d))});const c=document.createElement("li");c.dataset.value="all",c.textContent="All Genres",c.classList.add("selected"),a.appendChild(c),m.forEach(n=>{const r=t.get(n);if(r){const d=document.createElement("li");d.dataset.value=n,d.textContent=r,a.appendChild(d)}});const o=n=>{n?(a.classList.remove("hide"),i.setAttribute("aria-expanded","true")):(a.classList.add("hide"),i.setAttribute("aria-expanded","false"))};i.addEventListener("click",n=>{n.stopPropagation();const r=!a.classList.contains("hide");o(!r)}),document.addEventListener("click",n=>{e.contains(n.target)||o(!1)}),a.addEventListener("click",n=>{const r=n.target.closest("li");if(!r)return;a.querySelectorAll("li").forEach(p=>p.classList.remove("selected")),r.classList.add("selected"),s.textContent=r.textContent,o(!1);const d=r.dataset.value;g=1;const v=document.getElementById("libraryGallery"),M=document.getElementById("loadMore");v.innerHTML="",u=d==="all"?l:l.filter(p=>{var h;return(h=p.genre_ids)==null?void 0:h.includes(Number(d))}),f(v,M)})}async function f(e,t){if(!e)return;const a=(g-1)*y,i=a+y,s=u.slice(a,i);i>=u.length?t&&t.classList.add("is-hidden"):t&&t.classList.remove("is-hidden"),await O(s,e,!1)}async function O(e,t,a=!0){a&&(t.innerHTML="");const i=await Promise.all(e.map(async s=>{var n;const m=((n=s.genre_names)==null?void 0:n.length)>0?s.genre_names:await k(s.genre_ids||[]),c=s.release_date?s.release_date.slice(0,4):"—",o=s.poster_path?`https://image.tmdb.org/t/p/w500${s.poster_path}`:"./img/oops-logo.png";return H(s.vote_average,"movie-card__star"),`
+        <li class="movie-card" data-id="${s.id}">
+          <div class="movie-card__thumb">
+            <img class="movie-card__img" src="${o}" alt="${s.title}" loading="lazy" />
+            <div class="movie-card__overlay">
+              <span class="movie-card__rating">${(s.vote_average||0).toFixed(1)}</span>
+            </div>
+          </div>
+          <h3 class="movie-card__title">${s.title}</h3>
+          <div class="movie-card__meta">
+            <p>${m.slice(0,2).join(", ")} | ${c}</p>
+          </div>
+        </li>`}));t.innerHTML+=i.join("")}function R(e){e.dataset.listenerAttached!=="true"&&(e.addEventListener("click",t=>{const a=t.target.closest(".movie-card");a&&$(a.dataset.id)}),e.dataset.listenerAttached="true")}function L(e,t){if(l=b(),u=[...l],g=1,e.innerHTML="",l.length===0){E(e,t);return}f(e,t)}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",_,{once:!0}):_();
