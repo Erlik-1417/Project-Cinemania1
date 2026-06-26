@@ -1,11 +1,14 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import injectHtml from 'vite-plugin-html-inject';
+import FullReload from 'vite-plugin-full-reload';
 
 export default defineConfig({
-  root: 'src', 
+  root: 'src',
+  envDir: '../',
   build: {
-    outDir: '../dist', 
-    emptyOutDir: true,  
+    outDir: '../dist',
+    emptyOutDir: true,
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'src/index.html'),
@@ -14,4 +17,8 @@ export default defineConfig({
       },
     },
   },
+  plugins: [
+    injectHtml(),
+    FullReload(['src/partials/**/*.html', 'src/**/*.html']),
+  ],
 });
