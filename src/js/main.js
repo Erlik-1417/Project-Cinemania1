@@ -1,9 +1,12 @@
-import { initHeader } from './js/header.js';
-import { initHero } from './hero.js';
-import { initUpcoming } from './upcoming.js';
-import { hideGlobalLoader, initGlobalUi, showGlobalLoader } from './ui.js';
-import { initWeeklyTrends } from './js/weekly-trends.js';
-import './js/footer.js';
+import { initHeader } from './header.js';
+import { initHome } from './home.js';
+import './footer.js';
+
+import {
+  hideGlobalLoader,
+  initGlobalUi,
+  showGlobalLoader,
+} from './ui.js';
 
 async function bootstrapPage() {
   initGlobalUi();
@@ -11,15 +14,12 @@ async function bootstrapPage() {
   showGlobalLoader();
 
   try {
-    await Promise.allSettled([
-      initHero(),
-      initUpcoming(),
-      initWeeklyTrends(),
-    ]);
+    await initHome();
   } finally {
     hideGlobalLoader();
   }
 }
+
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', bootstrapPage, { once: true });
 } else {
