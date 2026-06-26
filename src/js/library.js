@@ -1,255 +1,223 @@
-'use strict';
-
-import { getTrending, getGenres, convertGenreIdsToNames, getMovieDetails } from './api.js';
-import { readSavedMovies } from './library-storage.js';
-import { showMovieSpotlight, showMovieTrailerSpotlight } from './movie-spotlight.js';
+import { initHeader } from './header.js';
+import { initHero } from './hero.js';
+import './footer.js';
+import { hideGlobalLoader, initGlobalUi, showGlobalLoader } from './ui.js';
+import { convertGenreIdsToNames, getGenres } from './api.js';
+import { LIBRARY_ADD_EVENT, LIBRARY_REMOVE_EVENT, readSavedMovies } from './library-storage.js';
+import { showMovieSpotlight } from './movie-spotlight.js';
 import { generateStarIconsMarkup } from './star-icons.js';
-import { showGlobalLoader, hideGlobalLoader } from './ui.js';
+import { reportError } from './logger.js';
 
-let visibleCount = 9;
-const limit = 9;
-const libraryRender = document.querySelector('.libraryRender');
-let selectedGenreName = 'All Genres';
-let genres = [];
-let movies = [];
-let currentMovies = [];
+let allMovies = [];
+let filteredMovies = [];
+let currentPage = 1;
+const perPage = 9;
 
-const getMovieOfTheDay = async () => {
-  try {
-    const response = await getTrending('day');
-    return response.results[0];
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const fetchMovies = async () => {
-  try {
-    return readSavedMovies();
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const fetchGenres = async () => {
-  try {
-    const genreMap = await getGenres();
-    return Array.from(genreMap.entries()).map(([id, name]) => ({ id, name }));
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const createRatingStars = (rating = 0) => {
-  return generateStarIconsMarkup(rating, 'rating_icon');
-};
-
-const renderLibrary = (items) => {
-  const getPoster = path => {
-    if (!path) {
-      return './img/oops-logo.png';
-    }
-    return `https://image.tmdb.org/t/p/w500${path}`;
-  };
-
-  return items.map(movie => {
-    const rate = createRatingStars(movie?.vote_average);
-    const title = movie?.title;
-    const imgUrl = getPoster(movie.poster_path);
-    const genresList = movie.genre_names ? movie.genre_names.slice(0, 2).join(', ') : '';
-    const year = movie?.release_date?.slice(0, 4) || '';
-
-    return `
-      <li class="movieItem" data-id="${movie.id}">
-        <img src="${imgUrl}" alt="${title}" />
-        <div class="movieInfo">
-          <div class="movieDescription">
-            <p>${title}</p>
-            <p class="genres">${genresList} | ${year}</p>
-          </div>
-          <ul class="rating_list">${rate}</ul>
-        </div>
-      </li>
-    `;
-  });
-};
-
-const renderDropdown = (genresData) => {
-  return `
-    <div class="dropdown">
-      <button class="dropdown-btn" id="genreBtn">
-        <span class="dropdown-text">${selectedGenreName}</span>
-        <svg class="dropdown-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#595959" stroke-width="2">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </button>
-      <ul class="dropdown-menu" id="genreMenu">
-        <li data-id="">All Genres</li>
-        ${genresData.map(genre => `<li data-id="${genre.id}">${genre.name}</li>`).join('')}
-      </ul>
-    </div>
-  `;
-};
-
-const renderTrendDay = (item) => {
-  const trendDaySelector = document.querySelector('.trendDay');
-  if (!trendDaySelector || !item) return;
-
-  const poster = `https://image.tmdb.org/t/p/original${item.backdrop_path}`;
-  trendDaySelector.style.backgroundImage = `
-    linear-gradient(to right, rgba(14, 14, 14, 1), rgba(14, 14, 14, 0)),
-    url("${poster}")
-  `;
-  const starTrend = generateStarIconsMarkup(item.vote_average, 'rating_icon');
-  const showOverView = item.overview.length > 98 ? item.overview.slice(0, 98) + '...' : item.overview;
-
-  trendDaySelector.innerHTML = `
-    <div class="container hero__container">
-      <div class="hero__content">
-        <p class="trendTitle myCinemaHeader">${item.title}</p>
-        <ul class="starTrend rating_list">${starTrend}</ul>
-        <p class="showOverView myCinemaTitle">${showOverView}</p>
-        <div class="trendBtnContainer">
-          <button class="trendTrailer libraryButtons" id="heroTrailerBtn" type="button">Watch trailer</button>
-          <button class="trendDetails libraryButtons" id="heroDetailsBtn" type="button">More details</button>
-        </div>
-      </div>
-    </div>
-  `;
-
-  document.getElementById('heroTrailerBtn').addEventListener('click', async () => {
-    try {
-      const details = await getMovieDetails(item.id);
-      if (details.videos?.results) {
-        const trailer = details.videos.results.find(v => v.type === 'Trailer' && v.site === 'YouTube');
-        if (trailer) {
-          showMovieTrailerSpotlight(item.id);
-          return;
-        }
-      }
-      showMovieTrailerSpotlight(item.id);
-    } catch (e) {
-      showMovieTrailerSpotlight(item.id);
-    }
-  });
-
-  document.getElementById('heroDetailsBtn').addEventListener('click', () => {
-    showMovieSpotlight(item.id);
-  });
-};
-
-const renderPage = (moviesData = movies, genresData = genres) => {
-  const myLibrary = renderLibrary(moviesData);
-  const realLibrary = readSavedMovies();
-
-  if (!realLibrary || realLibrary.length === 0) {
-    libraryRender.innerHTML = `
-      <div class="errorContainer">
-        <p class="libraryErrorMessage">
-          OOPS...<br>
-          We are very sorry!<br>
-          You don't have any movies at your library.
-        </p>
-        <a href="./catalog.html" class="libraryButtons searchRouting">Search movie</a>
-      </div>
-    `;
-    return;
-  }
-
-  if (myLibrary.length === 0) {
-    libraryRender.innerHTML = `
-      ${renderDropdown(genresData)}
-      <div class="errorContainer">
-        <p class="libraryErrorMessage">
-          OOPS...<br>
-          We couldn't find any movies in this genre.
-        </p>
-      </div>
-    `;
-    initDropdown(genresData);
-    return;
-  }
-
-  const visibleMovies = myLibrary.slice(0, visibleCount);
-  libraryRender.innerHTML = `
-    ${renderDropdown(genresData)}
-    <ul class="libraryList">${visibleMovies.join('')}</ul>
-    <button class="libraryButtons" id="loadMore">Load More</button>
-  `;
-
-  const loadMoreBtn = document.querySelector('#loadMore');
-  if (visibleCount >= myLibrary.length) {
-    loadMoreBtn.innerText = 'No more';
-    loadMoreBtn.disabled = true;
-  }
-
-  loadMoreBtn.addEventListener('click', () => {
-    visibleCount += limit;
-    renderPage(currentMovies, genresData);
-  });
-
-  const libraryList = document.querySelector('.libraryList');
-  libraryList.addEventListener('click', e => {
-    const selectedMovie = e.target.closest('.movieItem');
-    if (!selectedMovie) return;
-    showMovieSpotlight(selectedMovie.dataset.id);
-  });
-
-  initDropdown(genresData);
-};
-
-const initDropdown = (genresData) => {
-  const genreMenu = document.querySelector('#genreMenu');
-  const genreBtn = document.querySelector('#genreBtn');
-  const dropdown = document.querySelector('.dropdown');
-
-  if (!genreMenu || !genreBtn) return;
-
-  genreBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    dropdown.classList.toggle('active');
-  });
-
-  genreMenu.addEventListener('click', e => {
-    const selectedItem = e.target.closest('li');
-    if (!selectedItem) return;
-
-    selectedGenreName = selectedItem.textContent.trim();
-    dropdown.classList.remove('active');
-    visibleCount = 9;
-
-    const selectedGenre = selectedItem.dataset.id;
-    if (!selectedGenre) {
-      currentMovies = movies;
-      renderPage(currentMovies, genresData);
-      return;
-    }
-
-    currentMovies = movies.filter(movie => {
-      return movie.genre_ids && movie.genre_ids.includes(Number(selectedGenre));
-    });
-    renderPage(currentMovies, genresData);
-  });
-
-  document.addEventListener('click', () => {
-    if (dropdown) dropdown.classList.remove('active');
-  });
-};
-
-const init = async () => {
+async function bootstrapLibraryPage() {
+  initGlobalUi();
+  initHeader();
   showGlobalLoader();
+
   try {
-    genres = await fetchGenres();
-    const trendDay = await getMovieOfTheDay();
-    if (trendDay) renderTrendDay(trendDay);
-    movies = await fetchMovies();
-    currentMovies = movies;
-    renderPage(currentMovies, genres);
-  } catch (error) {
-    console.error(error);
+    await initHero();
+    await initLibrary();
   } finally {
     hideGlobalLoader();
   }
-};
+}
 
-document.addEventListener('DOMContentLoaded', init);
+async function initLibrary() {
+  const container = document.getElementById('libraryGallery');
+  const loadMoreBtn = document.getElementById('loadMore');
+  const genreFilter = document.getElementById('genreFilter');
+
+  if (!container) return;
+
+  allMovies = readSavedMovies();
+  filteredMovies = [...allMovies];
+
+  if (allMovies.length === 0) {
+    renderEmptyState(container, loadMoreBtn, genreFilter);
+    return;
+  }
+
+  const genreMap = await getGenres();
+  populateGenreDropdown(genreFilter, genreMap);
+  renderLibrarySlice(container, loadMoreBtn);
+
+  loadMoreBtn.addEventListener('click', () => {
+    currentPage++;
+    renderLibrarySlice(container, loadMoreBtn);
+  });
+
+  addCardListeners(container);
+  document.addEventListener(LIBRARY_ADD_EVENT, () => refreshLibrary(container, loadMoreBtn));
+  document.addEventListener(LIBRARY_REMOVE_EVENT, () => refreshLibrary(container, loadMoreBtn));
+}
+
+function renderEmptyState(container, loadMoreBtn, genreFilter) {
+  if (loadMoreBtn) loadMoreBtn.classList.add('is-hidden');
+  if (genreFilter) genreFilter.classList.add('is-hidden');
+  container.innerHTML = `
+    <div class="empty-state">
+      <p class="empty-text">OOPS...<br>We are very sorry!<br>You don't have any movies<br>at your library.</p>
+      <a href="./catalog.html" class="btn-search-more" target="_self">Search Movie</a>
+    </div>
+  `;
+}
+
+function populateGenreDropdown(genreFilter, genreMap) {
+  if (!genreFilter) return;
+
+  const list = genreFilter.querySelector('.custom-select__list');
+  const button = genreFilter.querySelector('.custom-select__button');
+  const label = genreFilter.querySelector('.custom-select__label');
+
+  if (!list || !button || !label) return;
+
+  const availableGenreIds = new Set();
+  allMovies.forEach(m => m.genre_ids?.forEach(id => availableGenreIds.add(id)));
+
+  const allItem = document.createElement('li');
+  allItem.dataset.value = 'all';
+  allItem.textContent = 'All Genres';
+  allItem.classList.add('selected');
+  list.appendChild(allItem);
+
+  availableGenreIds.forEach(id => {
+    const name = genreMap.get(id);
+    if (name) {
+      const li = document.createElement('li');
+      li.dataset.value = id;
+      li.textContent = name;
+      list.appendChild(li);
+    }
+  });
+
+  const toggleList = open => {
+    if (open) {
+      list.classList.remove('hide');
+      button.setAttribute('aria-expanded', 'true');
+    } else {
+      list.classList.add('hide');
+      button.setAttribute('aria-expanded', 'false');
+    }
+  };
+
+  button.addEventListener('click', e => {
+    e.stopPropagation();
+    const isOpen = !list.classList.contains('hide');
+    toggleList(!isOpen);
+  });
+
+  document.addEventListener('click', e => {
+    if (!genreFilter.contains(e.target)) toggleList(false);
+  });
+
+  list.addEventListener('click', e => {
+    const li = e.target.closest('li');
+    if (!li) return;
+
+    list.querySelectorAll('li').forEach(item => item.classList.remove('selected'));
+    li.classList.add('selected');
+    label.textContent = li.textContent;
+    toggleList(false);
+
+    const selectedId = li.dataset.value;
+    currentPage = 1;
+
+    const container = document.getElementById('libraryGallery');
+    const loadMoreBtn = document.getElementById('loadMore');
+    container.innerHTML = '';
+
+    filteredMovies =
+      selectedId === 'all'
+        ? allMovies
+        : allMovies.filter(m => m.genre_ids?.includes(Number(selectedId)));
+
+    renderLibrarySlice(container, loadMoreBtn);
+  });
+}
+
+async function renderLibrarySlice(container, loadMoreBtn) {
+  if (!container) return;
+
+  const start = (currentPage - 1) * perPage;
+  const end = start + perPage;
+  const slice = filteredMovies.slice(start, end);
+
+  if (end >= filteredMovies.length) {
+    if (loadMoreBtn) loadMoreBtn.classList.add('is-hidden');
+  } else {
+    if (loadMoreBtn) loadMoreBtn.classList.remove('is-hidden');
+  }
+
+  await renderMovies(slice, container, false);
+}
+
+async function renderMovies(moviesList, container, clear = true) {
+  if (clear) container.innerHTML = '';
+
+  const markup = await Promise.all(
+    moviesList.map(async movie => {
+      const genres =
+        movie.genre_names?.length > 0
+          ? movie.genre_names
+          : await convertGenreIdsToNames(movie.genre_ids || []);
+      const year = movie.release_date ? movie.release_date.slice(0, 4) : '—';
+      const poster = movie.poster_path
+        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+        : './img/oops-logo.png';
+
+      const starsHtml = generateStarIconsMarkup(movie.vote_average, 'movie-card__star');
+
+      return `
+        <li class="movie-card" data-id="${movie.id}">
+          <div class="movie-card__thumb">
+            <img class="movie-card__img" src="${poster}" alt="${movie.title}" loading="lazy" />
+            <div class="movie-card__overlay">
+              <span class="movie-card__rating">${(movie.vote_average || 0).toFixed(1)}</span>
+            </div>
+          </div>
+          <h3 class="movie-card__title">${movie.title}</h3>
+          <div class="movie-card__meta">
+            <p>${genres.slice(0, 2).join(', ')} | ${year}</p>
+          </div>
+        </li>`;
+    })
+  );
+
+  container.innerHTML += markup.join('');
+}
+
+function addCardListeners(container) {
+  if (container.dataset.listenerAttached === 'true') return;
+
+  container.addEventListener('click', e => {
+    const card = e.target.closest('.movie-card');
+    if (!card) return;
+    showMovieSpotlight(card.dataset.id);
+  });
+
+  container.dataset.listenerAttached = 'true';
+}
+
+function refreshLibrary(container, loadMoreBtn) {
+  allMovies = readSavedMovies();
+  filteredMovies = [...allMovies];
+  currentPage = 1;
+  container.innerHTML = '';
+
+  if (allMovies.length === 0) {
+    renderEmptyState(container, loadMoreBtn);
+    return;
+  }
+
+  renderLibrarySlice(container, loadMoreBtn);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootstrapLibraryPage, { once: true });
+} else {
+  bootstrapLibraryPage();
+}
