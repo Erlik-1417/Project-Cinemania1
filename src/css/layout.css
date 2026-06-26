@@ -825,7 +825,6 @@ body.light-theme .modal__close:hover {
   color: var(--orange-deep);
 }
 
-/* ===== MOVIE SPOTLIGHT MODAL ===== */
 .spotlight-open {
   overflow: hidden;
 }
@@ -1147,7 +1146,6 @@ body.light-theme .modal__close:hover {
     0 2px 6px rgba(0, 0, 0, 0.14);
 }
 
-/* ===== TABLET ===== */
 @media screen and (min-width: 768px) {
   .spotlight-shell:not(.spotlight-shell--trailer) {
     grid-template-columns: minmax(280px, 375px) 1fr;
@@ -1167,7 +1165,6 @@ body.light-theme .modal__close:hover {
   }
 }
 
-/* ===== MOBILE ===== */
 @media screen and (max-width: 767px) {
   .spotlight-backdrop {
     align-items: flex-start;
@@ -1289,7 +1286,6 @@ body.light-theme .modal__close:hover {
   }
 }
 
-/* ===== LIGHT THEME ===== */
 body.light-theme .spotlight-shell {
   background: var(--white);
   color: var(--background);
