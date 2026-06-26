@@ -1,4 +1,4 @@
-.libraryContainer{
+.libraryContainer {
     max-width: 1280px;
     margin: 0 auto;
 }
@@ -6,13 +6,13 @@
     padding: 40px 20px 0;
 }
 .libraryErrorMessage {
-    color : rgba(17, 17, 17, 1);
+    color: var(--text-primary);
     font-size: 20px;
     font-weight: 400;
     line-height: calc(28 / 20);
     text-align: center;
 }
-.myCinemaPlaceHolder{
+.myCinemaPlaceHolder {
     margin-bottom: 8px;
 }
 ul {
@@ -34,7 +34,7 @@ ul {
     line-height: 1;
     width: 235px;
 }
-.myCinemaTitle{
+.myCinemaTitle {
     font-size: 14px;
     font-weight: 400;
     line-height: 1;
@@ -53,14 +53,13 @@ ul {
     height: 408px;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
-
 
 .movieItem img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-
     position: absolute;
     inset: 0;
 }
@@ -70,9 +69,7 @@ ul {
     left: 20px;
     right: 20px;
     bottom: 20px;
-
     z-index: 2;
-
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -85,79 +82,78 @@ ul {
 .trendTitle {
     margin-bottom: 12px;
 }
-.starTrend{
+.starTrend {
     display: flex;
-    gap : 4px;
+    gap: 4px;
     margin-bottom: 16px;
 }
-.showOverView{
+.showOverView {
     margin-bottom: 20px;
 }
 .starTrend li {
     width: 16px;
     height: 16px;
 }
-.starTrend li svg{
+.starTrend li svg {
     width: 16px;
     height: 16px;
 }
-.trendBtnContainer{
+.trendBtnContainer {
     display: flex;
-    gap : 8px;
+    gap: 8px;
 }
-.trendTrailer{
-    background: linear-gradient(45deg, rgba(255, 194, 38, 1), rgba(248, 65, 25, 1));
+.trendTrailer {
+    background: var(--gradient-primary);
     border: none;
-    color : rgba(17, 17, 17, 1);
+    color: var(--black);
 }
-.errorContainer{
+.errorContainer {
     display: flex;
     flex-direction: column;
-    gap : 20px;
+    gap: 20px;
     align-items: center;
 }
 .searchRouting {
     text-decoration: none;
-    color : rgba(17, 17, 17, 1);
+    color: var(--black);
     padding: 12px 24px;
     border-radius: 74px;
-    background: linear-gradient(45deg, rgba(255, 194, 38, 1), rgba(248, 65, 25, 1));
+    background: var(--gradient-primary);
 }
-.movieDescription{
+.movieDescription {
     font-size: 12px;
     font-weight: 500;
     line-height: calc(20 / 12);
-    color : rgba(255, 255, 255, 1);
+    color: var(--white);
 }
-.genres{
-    color : rgba(255, 255, 255, 0.5);
+.genres {
+    color: var(--text-dark-muted);
 }
-#loadMore{
+#loadMore {
     display: block;
-    background: linear-gradient(45deg, rgba(255, 194, 38, 1), rgba(248, 65, 25, 1));
+    background: var(--gradient-primary);
     border: none;
-    color: rgba(17, 17, 17, 1);
+    color: var(--black);
     border-radius: 74px;
-    margin : 0 auto;
+    margin: 0 auto;
     margin-top: 24px;
 }
-.trendDetails{
-    border: 1px solid rgba(255, 255, 255, 1);
+.trendDetails {
+    border: 1px solid var(--white);
     background-color: transparent;
-    color : rgba(255, 255, 255, 1);
+    color: var(--white);
 }
-.trendDay{
-    background: linear-gradient(rgba(14, 14, 14, 1), rgba(14, 14, 14, 0)) , url("../img/library-desktop.jpg");
+.trendDay {
+    background: linear-gradient(var(--background), rgba(14, 14, 14, 0)), url("../img/library-desktop.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: left;
     padding: 40px 0 144px 20px;
 }
 .trendDay h1,
-.trendDay p{
-    color : white;
+.trendDay p {
+    color: var(--white);
 }
-
 
 .rating_list {
     display: flex;
@@ -180,7 +176,7 @@ ul {
     width: 16px;
     height: 16px;
     display: block;
-    fill : rgba(89, 89, 89, 1);
+    fill: var(--grey);
 }
 .dropdown-arrow {
     transition: transform .2s ease;
@@ -192,13 +188,13 @@ ul {
 .dropdown-btn {
     width: 100%;
     padding: 12px 12px 12px 16px;
-    border: 1px solid rgba(89, 89, 89, 1);
+    border: 1px solid var(--border-light-strong);
     border-radius: 8px;
-    color: rgba(89, 89, 89, 1);
+    color: var(--text-primary);
     cursor: pointer;
     text-align: left;
     background-color: transparent;
-    font-size : 14px;
+    font-size: 14px;
     font-weight: 500;
     line-height: 1;
     display: flex;
@@ -211,8 +207,8 @@ ul {
     top: calc(100% + 4px);
     left: 0;
     width: 100%;
-    background: rgba(248, 248, 248, 1);
-    border: 1px solid rgba(89, 89, 89, 1);
+    background: var(--surface-dark);
+    border: 1px solid var(--border-light-strong);
     border-radius: 8px;
     list-style: none;
     padding: 0;
@@ -226,29 +222,53 @@ ul {
 .dropdown-menu li {
     padding: 12px;
     cursor: pointer;
-    color: rgba(40, 40, 40, 1);
-    border-bottom: 1px solid rgba(89, 89, 89, 1);
+    color: var(--white);
+    border-bottom: 1px solid var(--border-light-soft);
     font-size: 14px;
     font-weight: 500;
     line-height: calc(20 / 14);
 }
 
 .dropdown-menu li:hover {
-    background: #333;
+    background: var(--secondary-black);
 }
 
 .dropdown.active .dropdown-menu {
     display: block;
 }
-@media screen and (min-width : 768px) {
-    .libraryList{
+
+/* Light Theme Overrides */
+body.light-theme .dropdown-btn {
+    border-color: var(--border-light-strong);
+    color: var(--background);
+}
+body.light-theme .dropdown-menu {
+    background: var(--white);
+    border-color: var(--border-light-strong);
+}
+body.light-theme .dropdown-menu li {
+    color: var(--background);
+    border-bottom-color: var(--border-light-soft);
+}
+body.light-theme .dropdown-menu li:hover {
+    background: var(--surface-white-soft);
+}
+body.light-theme .libraryErrorMessage {
+    color: var(--background);
+}
+body.light-theme .searchRouting {
+    color: var(--white);
+}
+
+@media screen and (min-width: 768px) {
+    .libraryList {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap : 28px 16px;
-        margin : 0 auto;
-        margin-top : 36px;
+        gap: 28px 16px;
+        margin: 0 auto;
+        margin-top: 36px;
     }
-    .movieItem{
+    .movieItem {
         width: 100%;
         aspect-ratio: 224/235;
         height: auto;
@@ -257,7 +277,7 @@ ul {
         padding: 0 32px;
         padding-top: 60px;
     }
-    #loadMore{
+    #loadMore {
         margin-top: 40px;
     }
     .rating_icon {
@@ -267,49 +287,48 @@ ul {
     .movieDescription p {
         line-height: calc(18/12);
     }
-    .trendDay{
+    .trendDay {
         padding: 36px 0 100px 32px;
     }
     .starTrend li {
         width: 20px;
         height: 20px;
     }
-
     .starTrend li svg {
         width: 20px;
         height: 20px;
     }
-    .myCinemaHeader{
+    .myCinemaHeader {
         font-size: 44px;
     }
     .dropdown {
         width: 144px;
         height: 44px;
     }
-
     .dropdown-menu {
         max-height: 160px;
     }
-    .libraryButtons{
+    .libraryButtons {
         padding: 10px 24px;
-        font-size : 14px;
+        font-size: 14px;
         line-height: calc(20 / 14);
     }
-    .myCinemaHeader{
+    .myCinemaHeader {
         width: 265px;
     }
-    .myCinemaTitle{width: 295px;}
+    .myCinemaTitle {
+        width: 295px;
+    }
 }
-@media screen and (min-width : 1156px) {
+@media screen and (min-width: 1156px) {
     .libraryList {
         row-gap: 32px;
-        margin-top: 48px
+        margin-top: 48px;
     }
-
     .movieItem {
         aspect-ratio: 394 / 574;
     }
-    .libraryRender{
+    .libraryRender {
         padding-top: 80px;
     }
     .rating_icon {
@@ -327,7 +346,6 @@ ul {
         width: 24px;
         height: 24px;
     }
-    
     .starTrend li svg {
         width: 24px;
         height: 24px;
@@ -335,7 +353,7 @@ ul {
     .myCinemaHeader {
         font-size: 64px;
     }
-    .myCinemaTitle{
+    .myCinemaTitle {
         font-size: 16px;
     }
     .dropdown {
@@ -350,20 +368,16 @@ ul {
         font-size: 16px;
         line-height: calc(24 / 16);
     }
-        .myCinemaHeader {
-            width: 385px;
-        }
-    
-        .myCinemaTitle {
-            width: 367px;
-        }
+    .myCinemaHeader {
+        width: 385px;
+    }
+    .myCinemaTitle {
+        width: 367px;
+    }
 }
 @media (min-resolution: 2dppx) {
     .trendDay {
-        background:
-            linear-gradient(rgba(14, 14, 14, 1), rgba(14, 14, 14, 0)),
-            url("../img/library-desktop@2x.jpg");
-
+        background: linear-gradient(var(--background), rgba(14, 14, 14, 0)), url("../img/library-desktop@2x.jpg");
         background-repeat: no-repeat;
         background-size: cover;
         background-position: left;
