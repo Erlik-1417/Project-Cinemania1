@@ -1,5 +1,6 @@
 import { initHeader } from './header.js';
 import { initHome } from './home.js';
+import { initHero } from './hero.js';
 import './footer.js';
 
 import {
@@ -14,7 +15,7 @@ async function bootstrapPage() {
   showGlobalLoader();
 
   try {
-    await initHome();
+    await Promise.allSettled([initHero(), initHome()]);
   } finally {
     hideGlobalLoader();
   }
